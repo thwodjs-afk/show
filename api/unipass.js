@@ -11,37 +11,17 @@ export default async function handler(req, res) {
     const blNo = bl.trim();
 
     try {
-        const url = `https://unipass.customs.go.kr/csp/handler/RetrieveCargoClearanceProgress?crkyCn=${API_KEY}&blNo=${blNo}&blYy=2026`;
+        // 유니패스 공식 API URL 형식
+        const url = `https://unipass.customs.go.kr/csp/myc/bsopspptinfo/cscllgstinfo/ImpCargPrgsInfoMtCtr/retrieveImpCargPrgsInfoLst.do?crkyCn=${API_KEY}&hblNo=${blNo}&blYy=2026`;
         
         const response = await fetch(url);
-        const xmlText = await response.text();
-
-        const getValue = (tag) => {
-            const match = xmlText.match(new RegExp(`<${tag}>([^<]*)</${tag}>`));
-            return match ? match[1] : '';
-        };
-
-        const status = getValue('prgsStts');
-        const location = getValue('shcoNm') || getValue('shedNm') || '-';
-        const product = getValue('prnm') || '-';
-        const time = getValue('prcsDttm') || '-';
-
-        if (!status) {
-            return res.status(200).json({
-                success: false,
-                message: '조회 결과가 없습니다.',
-                raw: xmlText.substring(0, 500)
-            });
-        }
-
-        let step = 1;
-        if (status.includes('하선') || status.includes('반입')) step = 2;
-        if (status.includes('수리')) step = 3;
-        if (status.includes('반출')) step = 4;
+        const text = await response.text();
 
         return res.status(200).json({
-            success: true,
-            data: { status, location, product, time, step }
+            success: false,
+            message: '응답 확인',
+            raw: text.substring(0, 1000),
+            url: url
         });
 
     } catch (error) {
