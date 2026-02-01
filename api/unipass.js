@@ -8,20 +8,36 @@ export default async function handler(req, res) {
     }
 
     const blNo = bl.trim();
+    const year = new Date().getFullYear();
 
     try {
-        // 유니패스 웹 조회 URL (비로그인 조회)
-        const url = `https://unipass.customs.go.kr/csp/myc/bsopspptinfo/cscllgstinfo/ImpCargPrgsInfoMtCtr/retrieveImpCargPrgsInfoLst.do`;
+        const url = 'https://unipass.customs.go.kr/csp/myc/bsopspptinfo/cscllgstinfo/ImpCargPrgsInfoMtCtr/retrieveImpCargPrgsInfoLst.do';
         
+        const formData = new URLSearchParams({
+            firstIndex: '0',
+            page: '1',
+            pageIndex: '1',
+            pageSize: '10',
+            pageUnit: '10',
+            recordCountPerPage: '10',
+            qryTp: '2',
+            cargMtNo: '',
+            mblNo: '',
+            hblNo: blNo,
+            blYy: year.toString(),
+            cntrNo: '',
+            mrn: ''
+        });
+
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             },
-            body: `blYy=2026&hblNo=${blNo}&mblNo=&blTpCd=2`
+            body: formData.toString()
         });
-        
+
         const text = await response.text();
 
         return res.status(200).json({
