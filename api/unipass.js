@@ -11,14 +11,10 @@ export default async function handler(req, res) {
     const blNo = bl.trim();
 
     try {
-        // Open API 정식 URL
-        const url = `https://unipass.customs.go.kr/csp/myc/bsopspptinfo/cscllgstinfo/ImpCargPrgsInfoMtCtr/retrieveImpCargPrgsInfoLstIvk.do?crkyCn=${API_KEY}&hblNo=${blNo}&blYy=2026`;
+        // 원래 API URL (파라미터 변경)
+        const url = `https://unipass.customs.go.kr/csp/handler/RetrieveCargoClearanceProgress?crkyCn=${API_KEY}&hblNo=${blNo}&hblYy=2026`;
         
-        const response = await fetch(url, {
-            headers: {
-                'Accept': 'application/xml'
-            }
-        });
+        const response = await fetch(url);
         const text = await response.text();
 
         return res.status(200).json({
