@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/unipass.js": {
-      "runtime": "@vercel/node"
-    }
-  }
-}
