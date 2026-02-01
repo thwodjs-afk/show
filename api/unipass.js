@@ -11,19 +11,16 @@ export default async function handler(req, res) {
     const blNo = bl.trim();
 
     try {
-        // Open API 공식 URL
-        const url = `https://unipass.customs.go.kr/csp/myc/bsopspptinfo/cscllgstinfo/ImpCargPrgsInfoMtCtr/retrieveImpCargPrgsInfoLstIvk.do?crkyCn=${API_KEY}&hblNo=${blNo}&blYy=2026&qryTp=2`;
+        // 유니패스 Open API 공식 URL (XML)
+        const url = `https://apis.customs.go.kr/openapi/service/cargCsclPrgsInfoQry/getCargCsclPrgsInfo?serviceKey=${API_KEY}&hblNo=${blNo}&year=2026`;
 
         const response = await fetch(url);
         const text = await response.text();
 
-        // JSON 파싱 시도
-        try {
-            const json = JSON.parse(text);
-            return res.status(200).json(json);
-        } catch {
-            return res.status(200).json({ raw: text.substring(0, 2000) });
-        }
+        return res.status(200).json({ 
+            raw: text.substring(0, 3000),
+            url: url
+        });
 
     } catch (error) {
         return res.status(500).json({ error: error.message });
