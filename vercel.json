@@ -1,15 +1,16 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
+  "functions": {
+    "api/unipass.js": {
+      "runtime": "@vercel/node@3"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    }
-  ]
+  }
 }
+```
+
+**4. "Commit changes" 클릭**
+
+---
+
+저장하면 Vercel이 자동 재배포해요. 1-2분 후에 다시 테스트:
+```
+https://show-inky.vercel.app/api/unipass?bl=YWPD260128NH6
