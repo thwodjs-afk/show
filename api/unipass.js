@@ -7,42 +7,23 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'B/L 번호를 입력해주세요.' });
     }
 
+    const API_KEY = 'j290w206j092b052c060x050a0';
     const blNo = bl.trim();
-    const year = new Date().getFullYear();
 
     try {
-        const url = 'https://unipass.customs.go.kr/csp/myc/bsopspptinfo/cscllgstinfo/ImpCargPrgsInfoMtCtr/retrieveImpCargPrgsInfoLst.do';
-        
-        const formData = new URLSearchParams({
-            firstIndex: '0',
-            page: '1',
-            pageIndex: '1',
-            pageSize: '10',
-            pageUnit: '10',
-            recordCountPerPage: '10',
-            qryTp: '2',
-            cargMtNo: '',
-            mblNo: '',
-            hblNo: blNo,
-            blYy: year.toString(),
-            cntrNo: '',
-            mrn: ''
-        });
+        // Open API 공식 URL
+        const url = `https://unipass.customs.go.kr/csp/myc/bsopspptinfo/cscllgstinfo/ImpCargPrgsInfoMtCtr/retrieveImpCargPrgsInfoLstIvk.do?crkyCn=${API_KEY}&hblNo=${blNo}&blYy=2026&qryTp=2`;
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            },
-            body: formData.toString()
-        });
-
+        const response = await fetch(url);
         const text = await response.text();
 
-        return res.status(200).json({
-            raw: text.substring(0, 3000)
-        });
+        // JSON 파싱 시도
+        try {
+            const json = JSON.parse(text);
+            return res.status(200).json(json);
+        } catch {
+            return res.status(200).json({ raw: text.substring(0, 2000) });
+        }
 
     } catch (error) {
         return res.status(500).json({ error: error.message });
