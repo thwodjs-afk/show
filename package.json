@@ -1,0 +1,12 @@
+{
+  "name": "unipass-api",
+  "version": "1.0.0",
+  "description": "유니패스 통관 조회 API",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}
